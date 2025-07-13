@@ -41,7 +41,10 @@ Une application web React moderne qui convertit automatiquement les bookmarks ex
 ### Export FreeMind Compatible
 - **Génération XML valide** compatible FreeMind
 - **Échappement XML complet** pour caractères spéciaux
-- **Noms de fichiers horodatés** : `bookmarks_reorganized_YYYY-MM-DD.mm`
+- **Options d'export flexibles** :
+  - Export complet (dossiers + bookmarks)
+  - Export structure seule (dossiers uniquement)
+- **Noms de fichiers horodatés** : `bookmarks_reorganized_YYYY-MM-DD.mm` ou `bookmarks_folders_only_YYYY-MM-DD.mm`
 - **Téléchargement automatique** avec nettoyage des ressources
 
 ## 🛠️ Technologies Utilisées
@@ -85,10 +88,16 @@ L'application sera accessible sur `http://localhost:5173/`
 - **Complexité Horizontale** : Ajustez le nombre de branches (3-15)
 - L'aperçu se met à jour automatiquement
 
-### 4. Exporter vers FreeMind
-- Cliquez sur "Exporter FreeMind" 
+### 4. Configurer l'export
+- **Options d'export** :
+  - ✅ **Inclure les bookmarks individuels** : Export complet avec liens cliquables
+  - ✅ **Inclure l'arborescence des dossiers** : Structure organisationnelle
+  - 📁 **Mode "Structure seule"** : Décocher les bookmarks pour n'exporter que l'arborescence
+
+### 5. Exporter vers FreeMind
+- Cliquez sur "Exporter FreeMind" ou "Exporter Structure"
 - Le fichier `.mm` se télécharge automatiquement
-- Ouvrez-le dans FreeMind pour naviguer dans vos bookmarks
+- Ouvrez-le dans FreeMind pour naviguer dans votre organisation
 
 ## 🏗️ Architecture du Code
 

@@ -68,6 +68,17 @@ export interface HierarchyParams {
 }
 
 /**
+ * Options d'export pour la génération FreeMind
+ * @interface ExportOptions
+ */
+export interface ExportOptions {
+  /** Inclure les bookmarks individuels dans l'export */
+  includeBookmarks: boolean;
+  /** Inclure les dossiers dans l'export */
+  includeFolders: boolean;
+}
+
+/**
  * Statistiques calculées sur l'ensemble des bookmarks
  * @interface BookmarkStats
  */

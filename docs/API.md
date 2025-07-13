@@ -73,6 +73,18 @@ interface HierarchyParams {
 }
 ```
 
+#### `ExportOptions`
+Options de configuration pour l'export FreeMind.
+
+```typescript
+interface ExportOptions {
+  /** Inclure les bookmarks individuels dans l'export */
+  includeBookmarks: boolean;
+  /** Inclure les dossiers dans l'export */
+  includeFolders: boolean;
+}
+```
+
 #### `BookmarkStats`
 Statistiques calculées sur l'ensemble des bookmarks.
 
@@ -232,19 +244,27 @@ generateFolderName('react', bookmarks);
 
 ## Module: freemindExporter
 
-### `generateFreeMindXML(rootNode: BookmarkNode): string`
+### `generateFreeMindXML(rootNode: BookmarkNode, options?: ExportOptions): string`
 
 Génère le fichier XML FreeMind complet à partir du nœud racine.
 
 **Paramètres:**
 - `rootNode` (BookmarkNode): Nœud racine de l'arborescence
+- `options` (ExportOptions, optionnel): Options d'export (par défaut: tout inclus)
 
 **Retourne:**
 - `string`: Contenu XML complet du fichier FreeMind
 
 **Exemple:**
 ```typescript
+// Export complet
 const xml = generateFreeMindXML(hierarchyRoot);
+
+// Export structure seule
+const xmlFolders = generateFreeMindXML(hierarchyRoot, { 
+  includeBookmarks: false, 
+  includeFolders: true 
+});
 console.log('XML généré:', xml.length, 'caractères');
 ```
 
@@ -264,20 +284,26 @@ console.log('XML généré:', xml.length, 'caractères');
 
 ---
 
-### `downloadFreeMindFile(rootNode: BookmarkNode): void`
+### `downloadFreeMindFile(rootNode: BookmarkNode, options?: ExportOptions): void`
 
 Génère et déclenche le téléchargement d'un fichier FreeMind.
 
 **Paramètres:**
 - `rootNode` (BookmarkNode): Nœud racine à exporter
+- `options` (ExportOptions, optionnel): Options d'export (par défaut: tout inclus)
 
 **Throws:**
 - `Error`: Si la génération du fichier échoue
 
 **Exemple:**
 ```typescript
+// Export complet
 downloadFreeMindFile(hierarchy);
 // Télécharge: bookmarks_reorganized_2024-01-15.mm
+
+// Export structure seule
+downloadFreeMindFile(hierarchy, { includeBookmarks: false, includeFolders: true });
+// Télécharge: bookmarks_folders_only_2024-01-15.mm
 ```
 
 **Processus:**
@@ -351,6 +377,57 @@ const STOP_WORDS = new Set([
 - **Fichiers volumineux** (>5000 bookmarks): Augmenter timeout
 - **Hiérarchie complexe** (>6 niveaux): Peut ralentir le rendu
 - **Export fréquent**: Réutiliser la hiérarchie existante
+
+## Module: hierarchyBuilder (Nouvelles fonctions)
+
+### `filterHierarchy(node: BookmarkNode, options: ExportOptions): BookmarkNode | null`
+
+Filtre une hiérarchie selon les options d'export spécifiées.
+
+**Paramètres:**
+- `node` (BookmarkNode): Nœud à filtrer
+- `options` (ExportOptions): Options de filtrage
+
+**Retourne:**
+- `BookmarkNode | null`: Nœud filtré ou null si supprimé
+
+**Exemple:**
+```typescript
+const foldersOnly = filterHierarchy(hierarchy, { 
+  includeBookmarks: false, 
+  includeFolders: true 
+});
+```
+
+**Algorithme:**
+1. Filtre selon le type de nœud (bookmark/folder)
+2. Traite récursivement les enfants
+3. Supprime les nœuds vides après filtrage
+4. Remonte les enfants si le parent est exclu
+
+## Cas d'Usage des Options d'Export
+
+### Mode "Structure seule"
+```typescript
+const options: ExportOptions = {
+  includeBookmarks: false,
+  includeFolders: true
+};
+```
+- **Usage** : Créer un plan/template de l'organisation
+- **Résultat** : Arborescence sans liens, uniquement la structure
+- **Fichier** : `bookmarks_folders_only_YYYY-MM-DD.mm`
+
+### Mode "Complet" (par défaut)
+```typescript
+const options: ExportOptions = {
+  includeBookmarks: true,
+  includeFolders: true
+};
+```
+- **Usage** : Export traditionnel avec tout le contenu
+- **Résultat** : Hiérarchie complète avec liens cliquables
+- **Fichier** : `bookmarks_reorganized_YYYY-MM-DD.mm`
 
 ---
 

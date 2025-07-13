@@ -17,7 +17,7 @@ import {
   AlertCircle,
   CheckCircle
 } from 'lucide-react';
-import { Bookmark, BookmarkNode, BookmarkStats, HierarchyParams } from '../types/bookmark';
+import { Bookmark, BookmarkNode, BookmarkStats, HierarchyParams, ExportOptions } from '../types/bookmark';
 import { parseBookmarksHTML } from '../utils/bookmarkParser';
 import { createHierarchy } from '../utils/hierarchyBuilder';
 import { downloadFreeMindFile } from '../utils/freemindExporter';
@@ -31,6 +31,10 @@ const BookmarkOrganizer: React.FC = () => {
   const [hierarchyParams, setHierarchyParams] = useState<HierarchyParams>({
     verticalComplexity: 4,
     horizontalComplexity: 8
+  });
+  const [exportOptions, setExportOptions] = useState<ExportOptions>({
+    includeBookmarks: true,
+    includeFolders: true
   });
 
   const stats = useMemo<BookmarkStats>(() => {
@@ -119,9 +123,9 @@ const BookmarkOrganizer: React.FC = () => {
 
   const handleExport = useCallback(() => {
     if (hierarchy) {
-      downloadFreeMindFile(hierarchy);
+      downloadFreeMindFile(hierarchy, exportOptions);
     }
-  }, [hierarchy]);
+  }, [hierarchy, exportOptions]);
 
   const renderHierarchyNode = useCallback((node: BookmarkNode, depth: number = 0): React.ReactNode => {
     const indentStyle = { paddingLeft: `${depth * 20}px` };
@@ -245,6 +249,49 @@ const BookmarkOrganizer: React.FC = () => {
                         className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                       />
                     </div>
+                    
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <h4 className="text-md font-medium text-gray-900 mb-3">Options d'Export</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="includeBookmarks"
+                            checked={exportOptions.includeBookmarks}
+                            onChange={(e) => setExportOptions(prev => ({ ...prev, includeBookmarks: e.target.checked }))}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor="includeBookmarks" className="ml-2 text-sm text-gray-700">
+                            Inclure les bookmarks individuels
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="includeFolders"
+                            checked={exportOptions.includeFolders}
+                            onChange={(e) => setExportOptions(prev => ({ ...prev, includeFolders: e.target.checked }))}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor="includeFolders" className="ml-2 text-sm text-gray-700">
+                            Inclure l'arborescence des dossiers
+                          </label>
+                        </div>
+                        
+                        {!exportOptions.includeBookmarks && !exportOptions.includeFolders && (
+                          <div className="text-sm text-red-600">
+                            ⚠️ Au moins une option doit être sélectionnée
+                          </div>
+                        )}
+                        
+                        {!exportOptions.includeBookmarks && exportOptions.includeFolders && (
+                          <div className="text-sm text-blue-600 bg-blue-50 p-2 rounded">
+                            📁 Mode "Structure seule" : Seule l'arborescence des dossiers sera exportée
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -257,10 +304,17 @@ const BookmarkOrganizer: React.FC = () => {
                     </h3>
                     <button
                       onClick={handleExport}
-                      className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors flex items-center"
+                      disabled={!exportOptions.includeBookmarks && !exportOptions.includeFolders}
+                      className={`px-4 py-2 rounded-lg transition-colors flex items-center ${
+                        !exportOptions.includeBookmarks && !exportOptions.includeFolders
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-green-500 text-white hover:bg-green-600'
+                      }`}
                     >
                       <Download className="w-4 h-4 mr-2" />
-                      Exporter FreeMind
+                      {!exportOptions.includeBookmarks && exportOptions.includeFolders 
+                        ? 'Exporter Structure' 
+                        : 'Exporter FreeMind'}
                     </button>
                   </div>
                   
@@ -319,16 +373,25 @@ const BookmarkOrganizer: React.FC = () => {
                 </h3>
                 
                 <p className="text-gray-600 text-sm mb-4">
-                  Votre hi�rarchie est pr�te � �tre export�e au format FreeMind (.mm). 
-                  Le fichier sera t�l�charg� automatiquement.
+                  {!exportOptions.includeBookmarks && exportOptions.includeFolders
+                    ? 'Votre structure de dossiers est prête à être exportée (sans les bookmarks individuels).'
+                    : 'Votre hiérarchie est prête à être exportée au format FreeMind (.mm).'
+                  } Le fichier sera téléchargé automatiquement.
                 </p>
                 
                 <button
                   onClick={handleExport}
-                  className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center"
+                  disabled={!exportOptions.includeBookmarks && !exportOptions.includeFolders}
+                  className={`w-full py-2 px-4 rounded-lg transition-colors flex items-center justify-center ${
+                    !exportOptions.includeBookmarks && !exportOptions.includeFolders
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-green-500 text-white hover:bg-green-600'
+                  }`}
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  T�l�charger FreeMind
+                  {!exportOptions.includeBookmarks && exportOptions.includeFolders 
+                    ? 'Télécharger Structure' 
+                    : 'Télécharger FreeMind'}
                 </button>
               </div>
             )}

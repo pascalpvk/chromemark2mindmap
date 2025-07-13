@@ -5,7 +5,7 @@
  * @version 1.0.0
  */
 
-import { Bookmark, BookmarkNode, BookmarkType, HierarchyParams } from '../types/bookmark';
+import { Bookmark, BookmarkNode, BookmarkType, HierarchyParams, ExportOptions } from '../types/bookmark';
 
 /**
  * Crée une hiérarchie intelligente à partir d'une liste de bookmarks
@@ -239,4 +239,68 @@ export function generateFolderName(identifier: string, bookmarks: Bookmark[]): s
   }
   
   return `${identifier.charAt(0).toUpperCase() + identifier.slice(1)} - ${count} ressources`;
+}
+
+/**
+ * Filtre une hiérarchie selon les options d'export spécifiées
+ * Supprime les bookmarks ou dossiers selon les paramètres
+ * 
+ * @param {BookmarkNode} node - Nœud à filtrer
+ * @param {ExportOptions} options - Options de filtrage
+ * @returns {BookmarkNode | null} Nœud filtré ou null si supprimé
+ * 
+ * @example
+ * ```typescript
+ * const foldersOnly = filterHierarchy(hierarchy, { includeBookmarks: false, includeFolders: true });
+ * ```
+ */
+export function filterHierarchy(node: BookmarkNode, options: ExportOptions): BookmarkNode | null {
+  // Filtrer selon le type de nœud
+  if (node.type === 'bookmark' && !options.includeBookmarks) {
+    return null;
+  }
+  
+  if (node.type === 'folder' && !options.includeFolders) {
+    // Si on n'inclut pas les dossiers mais qu'on a des enfants, 
+    // on remonte les enfants au niveau supérieur
+    if (node.children) {
+      const filteredChildren = node.children
+        .map(child => filterHierarchy(child, options))
+        .filter((child): child is BookmarkNode => child !== null);
+      
+      // Créer un nœud virtuel pour regrouper les enfants
+      if (filteredChildren.length > 0) {
+        return {
+          name: 'Flattened',
+          type: 'folder',
+          children: filteredChildren,
+          count: filteredChildren.length
+        };
+      }
+    }
+    return null;
+  }
+  
+  // Pour les nœuds conservés, filtrer récursivement les enfants
+  if (node.children) {
+    const filteredChildren = node.children
+      .map(child => filterHierarchy(child, options))
+      .filter((child): child is BookmarkNode => child !== null);
+    
+    const filteredNode: BookmarkNode = {
+      ...node,
+      children: filteredChildren,
+      count: filteredChildren.length
+    };
+    
+    // Ne conserver le nœud que s'il a des enfants ou si c'est un bookmark
+    if (filteredChildren.length > 0 || node.type === 'bookmark') {
+      return filteredNode;
+    }
+    
+    return null;
+  }
+  
+  // Nœud feuille : le conserver tel quel
+  return { ...node };
 }
