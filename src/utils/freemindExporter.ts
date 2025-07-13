@@ -146,6 +146,6 @@ export function downloadFreeMindFile(rootNode: BookmarkNode, options: ExportOpti
     console.log(`FreeMind file "${filename}" generated successfully`);
   } catch (error) {
     console.error('Error generating FreeMind file:', error);
-    alert('Erreur lors de la g�n�ration du fichier FreeMind. Veuillez r�essayer.');
+    alert('Erreur lors de la génération du fichier FreeMind. Veuillez réessayer.');
   }
 }

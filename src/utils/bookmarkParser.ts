@@ -44,11 +44,11 @@ const TYPE_PATTERNS: Record<BookmarkType, { domains: string[], keywords: string[
   },
   'News & Blog': {
     domains: ['news', 'blog', 'medium.com', 'wordpress.', 'blogger.', 'substack.'],
-    keywords: ['news', 'blog', 'article', 'post', 'actualit�', 'information', 'journal', 'magazine']
+    keywords: ['news', 'blog', 'article', 'post', 'actualité', 'information', 'journal', 'magazine']
   },
   'Social Networks': {
     domains: ['facebook.com', 'twitter.com', 'linkedin.com', 'instagram.com', 'tiktok.com', 'reddit.com'],
-    keywords: ['social', 'network', 'share', 'post', 'follow', 'friend', 'community', 'r�seau']
+    keywords: ['social', 'network', 'share', 'post', 'follow', 'friend', 'community', 'réseau']
   },
   'Cloud & Storage': {
     domains: ['drive.google.com', 'dropbox.com', 'onedrive.', 'icloud.com', 'box.com'],
@@ -60,7 +60,7 @@ const TYPE_PATTERNS: Record<BookmarkType, { domains: string[], keywords: string[
   },
   'Formation & Learning': {
     domains: ['udemy.com', 'coursera.org', 'edx.org', 'khan', 'pluralsight.com', 'lynda.com'],
-    keywords: ['course', 'learn', 'education', 'training', 'tutorial', 'formation', 'cours', '�cole']
+    keywords: ['course', 'learn', 'education', 'training', 'tutorial', 'formation', 'cours', 'école']
   },
   'Various Resources': {
     domains: [],

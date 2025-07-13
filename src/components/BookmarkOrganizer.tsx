@@ -75,7 +75,7 @@ const BookmarkOrganizer: React.FC = () => {
 
   const handleFileUpload = useCallback(async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.html')) {
-      setError('Veuillez s�lectionner un fichier HTML d\'export de bookmarks Chrome.');
+      setError('Veuillez sélectionner un fichier HTML d\'export de bookmarks Chrome.');
       return;
     }
 
@@ -87,7 +87,7 @@ const BookmarkOrganizer: React.FC = () => {
       const parsedBookmarks = parseBookmarksHTML(content);
       
       if (parsedBookmarks.length === 0) {
-        setError('Aucun bookmark trouv� dans le fichier. V�rifiez qu\'il s\'agit bien d\'un export Chrome.');
+        setError('Aucun bookmark trouvé dans le fichier. Vérifiez qu\'il s\'agit bien d\'un export Chrome.');
         return;
       }
 
@@ -97,7 +97,7 @@ const BookmarkOrganizer: React.FC = () => {
       setHierarchy(newHierarchy);
       
     } catch (err) {
-      setError('Erreur lors du traitement du fichier. Veuillez v�rifier le format.');
+      setError('Erreur lors du traitement du fichier. Veuillez vérifier le format.');
       console.error('File processing error:', err);
     } finally {
       setIsLoading(false);
@@ -158,7 +158,7 @@ const BookmarkOrganizer: React.FC = () => {
             Chrome Bookmarks to FreeMind
           </h1>
           <p className="text-gray-600">
-            Convertissez et r�organisez vos bookmarks Chrome en carte mentale FreeMind
+            Convertissez et réorganisez vos bookmarks Chrome en carte mentale FreeMind
           </p>
         </div>
 
@@ -197,11 +197,11 @@ const BookmarkOrganizer: React.FC = () => {
                     <div className="flex flex-col items-center">
                       <Upload className="w-8 h-8 text-gray-400 mb-2" />
                       <p className="text-gray-600 mb-2">
-                        Glissez-d�posez votre fichier HTML d'export Chrome
+                        Glissez-déposez votre fichier HTML d'export Chrome
                       </p>
                       <p className="text-sm text-gray-500 mb-4">ou</p>
                       <label className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 cursor-pointer transition-colors">
-                        S�lectionner un fichier
+                        Sélectionner un fichier
                         <input
                           type="file"
                           accept=".html"
@@ -218,13 +218,13 @@ const BookmarkOrganizer: React.FC = () => {
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <Settings className="w-5 h-5 mr-2" />
-                    Param�tres de Hi�rarchie
+                    Paramètres de Hiérarchie
                   </h3>
                   
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Complexit� Verticale: {hierarchyParams.verticalComplexity} niveaux
+                        Complexité Verticale: {hierarchyParams.verticalComplexity} niveaux
                       </label>
                       <input
                         type="range"
@@ -238,7 +238,7 @@ const BookmarkOrganizer: React.FC = () => {
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Complexit� Horizontale: {hierarchyParams.horizontalComplexity} branches
+                        Complexité Horizontale: {hierarchyParams.horizontalComplexity} branches
                       </label>
                       <input
                         type="range"
@@ -300,7 +300,7 @@ const BookmarkOrganizer: React.FC = () => {
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Aper�u de la Hi�rarchie
+                      Aperçu de la Hiérarchie
                     </h3>
                     <button
                       onClick={handleExport}
@@ -347,7 +347,7 @@ const BookmarkOrganizer: React.FC = () => {
                   
                   <div className="border-t pt-3">
                     <span className="text-sm font-medium text-gray-700 mb-2 block">
-                      Types d�tect�s:
+                      Types détectés:
                     </span>
                     <div className="space-y-1">
                       {Object.entries(stats.detectedTypes)
@@ -369,7 +369,7 @@ const BookmarkOrganizer: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
-                  Pr�t pour l'export
+                  Prêt pour l'export
                 </h3>
                 
                 <p className="text-gray-600 text-sm mb-4">
