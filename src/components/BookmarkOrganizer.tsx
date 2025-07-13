@@ -1,3 +1,10 @@
+/**
+ * @fileoverview Composant principal de l'application Chrome Bookmarks to FreeMind
+ * GÃ¨re l'Ã©tat global, l'interface utilisateur et la coordination des utilitaires
+ * @author Chrome Bookmark to FreeMind Converter
+ * @version 1.0.0
+ */
+
 import React, { useState, useCallback, useMemo } from 'react';
 import { 
   Upload, 
@@ -64,7 +71,7 @@ const BookmarkOrganizer: React.FC = () => {
 
   const handleFileUpload = useCallback(async (file: File) => {
     if (!file.name.toLowerCase().endsWith('.html')) {
-      setError('Veuillez sélectionner un fichier HTML d\'export de bookmarks Chrome.');
+      setError('Veuillez sï¿½lectionner un fichier HTML d\'export de bookmarks Chrome.');
       return;
     }
 
@@ -76,7 +83,7 @@ const BookmarkOrganizer: React.FC = () => {
       const parsedBookmarks = parseBookmarksHTML(content);
       
       if (parsedBookmarks.length === 0) {
-        setError('Aucun bookmark trouvé dans le fichier. Vérifiez qu\'il s\'agit bien d\'un export Chrome.');
+        setError('Aucun bookmark trouvï¿½ dans le fichier. Vï¿½rifiez qu\'il s\'agit bien d\'un export Chrome.');
         return;
       }
 
@@ -86,7 +93,7 @@ const BookmarkOrganizer: React.FC = () => {
       setHierarchy(newHierarchy);
       
     } catch (err) {
-      setError('Erreur lors du traitement du fichier. Veuillez vérifier le format.');
+      setError('Erreur lors du traitement du fichier. Veuillez vï¿½rifier le format.');
       console.error('File processing error:', err);
     } finally {
       setIsLoading(false);
@@ -147,7 +154,7 @@ const BookmarkOrganizer: React.FC = () => {
             Chrome Bookmarks to FreeMind
           </h1>
           <p className="text-gray-600">
-            Convertissez et réorganisez vos bookmarks Chrome en carte mentale FreeMind
+            Convertissez et rï¿½organisez vos bookmarks Chrome en carte mentale FreeMind
           </p>
         </div>
 
@@ -186,11 +193,11 @@ const BookmarkOrganizer: React.FC = () => {
                     <div className="flex flex-col items-center">
                       <Upload className="w-8 h-8 text-gray-400 mb-2" />
                       <p className="text-gray-600 mb-2">
-                        Glissez-déposez votre fichier HTML d'export Chrome
+                        Glissez-dï¿½posez votre fichier HTML d'export Chrome
                       </p>
                       <p className="text-sm text-gray-500 mb-4">ou</p>
                       <label className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 cursor-pointer transition-colors">
-                        Sélectionner un fichier
+                        Sï¿½lectionner un fichier
                         <input
                           type="file"
                           accept=".html"
@@ -207,13 +214,13 @@ const BookmarkOrganizer: React.FC = () => {
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                     <Settings className="w-5 h-5 mr-2" />
-                    Paramètres de Hiérarchie
+                    Paramï¿½tres de Hiï¿½rarchie
                   </h3>
                   
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Complexité Verticale: {hierarchyParams.verticalComplexity} niveaux
+                        Complexitï¿½ Verticale: {hierarchyParams.verticalComplexity} niveaux
                       </label>
                       <input
                         type="range"
@@ -227,7 +234,7 @@ const BookmarkOrganizer: React.FC = () => {
                     
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Complexité Horizontale: {hierarchyParams.horizontalComplexity} branches
+                        Complexitï¿½ Horizontale: {hierarchyParams.horizontalComplexity} branches
                       </label>
                       <input
                         type="range"
@@ -246,7 +253,7 @@ const BookmarkOrganizer: React.FC = () => {
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">
-                      Aperçu de la Hiérarchie
+                      Aperï¿½u de la Hiï¿½rarchie
                     </h3>
                     <button
                       onClick={handleExport}
@@ -286,7 +293,7 @@ const BookmarkOrganizer: React.FC = () => {
                   
                   <div className="border-t pt-3">
                     <span className="text-sm font-medium text-gray-700 mb-2 block">
-                      Types détectés:
+                      Types dï¿½tectï¿½s:
                     </span>
                     <div className="space-y-1">
                       {Object.entries(stats.detectedTypes)
@@ -308,12 +315,12 @@ const BookmarkOrganizer: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                   <CheckCircle className="w-5 h-5 mr-2 text-green-500" />
-                  Prêt pour l'export
+                  Prï¿½t pour l'export
                 </h3>
                 
                 <p className="text-gray-600 text-sm mb-4">
-                  Votre hiérarchie est prête à être exportée au format FreeMind (.mm). 
-                  Le fichier sera téléchargé automatiquement.
+                  Votre hiï¿½rarchie est prï¿½te ï¿½ ï¿½tre exportï¿½e au format FreeMind (.mm). 
+                  Le fichier sera tï¿½lï¿½chargï¿½ automatiquement.
                 </p>
                 
                 <button
@@ -321,7 +328,7 @@ const BookmarkOrganizer: React.FC = () => {
                   className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center"
                 >
                   <Download className="w-4 h-4 mr-2" />
-                  Télécharger FreeMind
+                  Tï¿½lï¿½charger FreeMind
                 </button>
               </div>
             )}

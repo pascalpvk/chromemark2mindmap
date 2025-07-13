@@ -1,5 +1,17 @@
+/**
+ * @fileoverview Parser pour les fichiers HTML d'export de bookmarks Chrome
+ * Analyse et classifie automatiquement les bookmarks par type de contenu
+ * @author Chrome Bookmark to FreeMind Converter
+ * @version 1.0.0
+ */
+
 import { Bookmark, BookmarkType } from '../types/bookmark';
 
+/**
+ * Mots vides à filtrer lors de l'extraction de mots-clés
+ * Inclut les mots courants en français et anglais
+ * @constant {Set<string>}
+ */
 const STOP_WORDS = new Set([
   'le', 'la', 'les', 'un', 'une', 'des', 'du', 'de', 'et', 'ou', 'mais', 'donc', 'car', 'ni', 'or',
   'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from',
@@ -8,6 +20,11 @@ const STOP_WORDS = new Set([
   'these', 'those', 'it', 'its', 'they', 'them', 'their', 'you', 'your', 'we', 'our', 'us'
 ]);
 
+/**
+ * Patterns de classification pour détecter automatiquement le type de contenu
+ * Basé sur l'analyse des domaines et mots-clés dans les titres
+ * @constant {Record<BookmarkType, {domains: string[], keywords: string[]}>}
+ */
 const TYPE_PATTERNS: Record<BookmarkType, { domains: string[], keywords: string[] }> = {
   'Videos & Multimedia': {
     domains: ['youtube.com', 'vimeo.com', 'dailymotion.com', 'twitch.tv', 'netflix.com', 'amazon.com/prime'],
@@ -27,11 +44,11 @@ const TYPE_PATTERNS: Record<BookmarkType, { domains: string[], keywords: string[
   },
   'News & Blog': {
     domains: ['news', 'blog', 'medium.com', 'wordpress.', 'blogger.', 'substack.'],
-    keywords: ['news', 'blog', 'article', 'post', 'actualit�', 'information', 'journal', 'magazine']
+    keywords: ['news', 'blog', 'article', 'post', 'actualit�', 'information', 'journal', 'magazine']
   },
   'Social Networks': {
     domains: ['facebook.com', 'twitter.com', 'linkedin.com', 'instagram.com', 'tiktok.com', 'reddit.com'],
-    keywords: ['social', 'network', 'share', 'post', 'follow', 'friend', 'community', 'r�seau']
+    keywords: ['social', 'network', 'share', 'post', 'follow', 'friend', 'community', 'r�seau']
   },
   'Cloud & Storage': {
     domains: ['drive.google.com', 'dropbox.com', 'onedrive.', 'icloud.com', 'box.com'],
@@ -43,7 +60,7 @@ const TYPE_PATTERNS: Record<BookmarkType, { domains: string[], keywords: string[
   },
   'Formation & Learning': {
     domains: ['udemy.com', 'coursera.org', 'edx.org', 'khan', 'pluralsight.com', 'lynda.com'],
-    keywords: ['course', 'learn', 'education', 'training', 'tutorial', 'formation', 'cours', '�cole']
+    keywords: ['course', 'learn', 'education', 'training', 'tutorial', 'formation', 'cours', '�cole']
   },
   'Various Resources': {
     domains: [],
@@ -51,6 +68,19 @@ const TYPE_PATTERNS: Record<BookmarkType, { domains: string[], keywords: string[
   }
 };
 
+/**
+ * Parse un fichier HTML d'export de bookmarks Chrome et extrait tous les bookmarks
+ * 
+ * @param {string} htmlContent - Contenu HTML du fichier d'export Chrome
+ * @returns {Bookmark[]} Liste des bookmarks parsés avec classification automatique
+ * 
+ * @example
+ * ```typescript
+ * const htmlContent = await file.text();
+ * const bookmarks = parseBookmarksHTML(htmlContent);
+ * console.log(`${bookmarks.length} bookmarks trouvés`);
+ * ```
+ */
 export function parseBookmarksHTML(htmlContent: string): Bookmark[] {
   const parser = new DOMParser();
   const doc = parser.parseFromString(htmlContent, 'text/html');
@@ -84,6 +114,19 @@ export function parseBookmarksHTML(htmlContent: string): Bookmark[] {
   return bookmarks;
 }
 
+/**
+ * Analyse le titre et le domaine d'un bookmark pour déterminer son type de contenu
+ * 
+ * @param {string} title - Titre du bookmark
+ * @param {string} domain - Nom de domaine de l'URL
+ * @returns {BookmarkType} Type de contenu détecté
+ * 
+ * @example
+ * ```typescript
+ * const type = analyzeBookmarkType('React Documentation', 'react.dev');
+ * // Retourne: 'Documentation & Help'
+ * ```
+ */
 export function analyzeBookmarkType(title: string, domain: string): BookmarkType {
   const titleLower = title.toLowerCase();
   const domainLower = domain.toLowerCase();
@@ -107,6 +150,19 @@ export function analyzeBookmarkType(title: string, domain: string): BookmarkType
   return 'Various Resources';
 }
 
+/**
+ * Extrait les mots-clés significatifs d'un titre de bookmark
+ * Filtre les mots vides et garde les 3 premiers mots les plus longs
+ * 
+ * @param {string} title - Titre du bookmark
+ * @returns {string[]} Liste des mots-clés extraits (max 3)
+ * 
+ * @example
+ * ```typescript
+ * const keywords = extractKeywords('React Tutorial for Beginners');
+ * // Retourne: ['react', 'tutorial', 'beginners']
+ * ```
+ */
 export function extractKeywords(title: string): string[] {
   const words = title
     .toLowerCase()
@@ -117,6 +173,18 @@ export function extractKeywords(title: string): string[] {
   return words.slice(0, 3);
 }
 
+/**
+ * Extrait le nom de domaine d'une URL
+ * 
+ * @param {string} url - URL complète
+ * @returns {string} Nom de domaine en minuscules, ou chaîne vide si invalide
+ * 
+ * @example
+ * ```typescript
+ * const domain = getDomainFromUrl('https://www.example.com/page');
+ * // Retourne: 'www.example.com'
+ * ```
+ */
 export function getDomainFromUrl(url: string): string {
   try {
     return new URL(url).hostname.toLowerCase();

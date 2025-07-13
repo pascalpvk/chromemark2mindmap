@@ -1,5 +1,28 @@
+/**
+ * @fileoverview Constructeur de hiérarchie intelligente pour organiser les bookmarks
+ * Crée une arborescence équilibrée basée sur les types, domaines et mots-clés
+ * @author Chrome Bookmark to FreeMind Converter
+ * @version 1.0.0
+ */
+
 import { Bookmark, BookmarkNode, BookmarkType, HierarchyParams } from '../types/bookmark';
 
+/**
+ * Crée une hiérarchie intelligente à partir d'une liste de bookmarks
+ * Respecte les contraintes de complexité verticale et horizontale
+ * 
+ * @param {Bookmark[]} bookmarks - Liste des bookmarks à organiser
+ * @param {HierarchyParams} params - Paramètres de complexité de la hiérarchie
+ * @returns {BookmarkNode} Noeud racine de l'arborescence générée
+ * 
+ * @example
+ * ```typescript
+ * const hierarchy = createHierarchy(bookmarks, {
+ *   verticalComplexity: 4,
+ *   horizontalComplexity: 8
+ * });
+ * ```
+ */
 export function createHierarchy(bookmarks: Bookmark[], params: HierarchyParams): BookmarkNode {
   const { verticalComplexity, horizontalComplexity } = params;
   
@@ -42,6 +65,16 @@ export function createHierarchy(bookmarks: Bookmark[], params: HierarchyParams):
   return rootNode;
 }
 
+/**
+ * Crée récursivement une branche de l'arborescence
+ * S'arrête quand la profondeur ou le seuil horizontal est atteint
+ * 
+ * @param {string} name - Nom du noeud/dossier
+ * @param {Bookmark[]} bookmarks - Bookmarks à inclure dans cette branche
+ * @param {number} remainingDepth - Profondeur restante autorisée
+ * @param {number} horizontalComplexity - Nombre max de branches par niveau
+ * @returns {BookmarkNode} Noeud de la branche créée
+ */
 function createBranch(name: string, bookmarks: Bookmark[], remainingDepth: number, horizontalComplexity: number): BookmarkNode {
   const node: BookmarkNode = {
     name: `${name} (${bookmarks.length})`,
@@ -71,6 +104,14 @@ function createBranch(name: string, bookmarks: Bookmark[], remainingDepth: numbe
   return node;
 }
 
+/**
+ * Crée des sous-groupes intelligents basés sur les domaines et mots-clés
+ * Privilégie les domaines dominants puis les mots-clés fréquents
+ * 
+ * @param {Bookmark[]} bookmarks - Bookmarks à grouper
+ * @param {number} maxGroups - Nombre maximum de groupes à créer
+ * @returns {{name: string, bookmarks: Bookmark[]}[]} Liste des groupes créés
+ */
 function createSubGroups(bookmarks: Bookmark[], maxGroups: number): { name: string, bookmarks: Bookmark[] }[] {
   const domainGroups = groupBookmarksByDomain(bookmarks);
   const keywordGroups = groupBookmarksByKeywords(bookmarks);
@@ -176,6 +217,19 @@ function groupBookmarksByKeywords(bookmarks: Bookmark[]): Record<string, Bookmar
   );
 }
 
+/**
+ * Génère un nom de dossier intelligent basé sur l'identifiant et le contenu
+ * 
+ * @param {string} identifier - Identifiant (domaine ou mot-clé)
+ * @param {Bookmark[]} bookmarks - Bookmarks contenus dans ce dossier
+ * @returns {string} Nom de dossier généré avec compteur
+ * 
+ * @example
+ * ```typescript
+ * generateFolderName('github.com', bookmarks);
+ * // Retourne: 'Github - 15 liens'
+ * ```
+ */
 export function generateFolderName(identifier: string, bookmarks: Bookmark[]): string {
   const count = bookmarks.length;
   
